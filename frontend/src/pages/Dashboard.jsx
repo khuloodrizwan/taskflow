@@ -72,3 +72,105 @@ const Dashboard = () => {
             Add New Activity
           </Link>
         </div>
+        </div>
+
+        <div className="stats-grid">
+          <div className="stat-card stat-primary">
+            <div className="stat-icon">📊</div>
+            <div className="stat-content">
+              <h3 className="stat-value">{stats.total}</h3>
+              <p className="stat-label">Total Activities</p>
+            </div>
+          </div>
+
+          <div className="stat-card stat-success">
+            <div className="stat-icon">✅</div>
+            <div className="stat-content">
+              <h3 className="stat-value">{stats.completed}</h3>
+              <p className="stat-label">Completed</p>
+            </div>
+          </div>
+
+          <div className="stat-card stat-warning">
+            <div className="stat-icon">⏳</div>
+            <div className="stat-content">
+              <h3 className="stat-value">{stats.inProgress}</h3>
+              <p className="stat-label">In Progress</p>
+            </div>
+          </div>
+
+          <div className="stat-card stat-info">
+            <div className="stat-icon">⏱️</div>
+            <div className="stat-content">
+              <h3 className="stat-value">{stats.totalHours}h</h3>
+              <p className="stat-label">Total Hours</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-content">
+          <div className="content-header">
+            <h2 className="content-title">Recent Activities</h2>
+            <div className="content-actions">
+              <Link to="/analytics" className="btn btn-secondary">
+                📈 View Analytics
+              </Link>
+            </div>
+          </div>
+
+          <ActivityList 
+            activities={activities} 
+            loading={loading} 
+            error={error}
+          />
+        </div>
+
+        {!loading && activities.length > 0 && (
+          <div className="dashboard-insights">
+            <h2 className="insights-title">Quick Insights</h2>
+            <div className="insights-grid">
+              <div className="insight-card">
+                <span className="insight-icon">🎯</span>
+                <div className="insight-content">
+                  <h4>Completion Rate</h4>
+                  <p className="insight-value">
+                    {stats.total > 0 
+                      ? Math.round((stats.completed / stats.total) * 100) 
+                      : 0}%
+                  </p>
+                  <p className="insight-desc">
+                    {stats.completed} of {stats.total} activities completed
+                  </p>
+                </div>
+              </div>
+
+              <div className="insight-card">
+                <span className="insight-icon">📈</span>
+                <div className="insight-content">
+                  <h4>Average Duration</h4>
+                  <p className="insight-value">
+                    {stats.total > 0 
+                      ? (stats.totalHours / stats.total).toFixed(1) 
+                      : 0}h
+                  </p>
+                  <p className="insight-desc">Per activity</p>
+                </div>
+              </div>
+
+              <div className="insight-card">
+                <span className="insight-icon">⚡</span>
+                <div className="insight-content">
+                  <h4>Active Tasks</h4>
+                  <p className="insight-value">{stats.inProgress + stats.pending}</p>
+                  <p className="insight-desc">Need your attention</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+  
+  )
+}
+
+export default Dashboard
