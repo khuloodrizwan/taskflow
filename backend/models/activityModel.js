@@ -1,3 +1,4 @@
+
 // models/Activity.js - Activity model schema
 
 const mongoose = require('mongoose');
