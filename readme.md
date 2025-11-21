@@ -148,10 +148,8 @@ team-activity-tracker/
     │   ├── App.jsx
     │   └── main.jsx
     └── package.json
-```
 📚 API Documentation
 For detailed API documentation including endpoints, request/response formats, and authentication requirements, see API.md.
-
 🔐 Authentication
 The application uses JWT (JSON Web Tokens) for authentication:
 
@@ -180,3 +178,23 @@ User management table
 All activities with search/filter
 Real-time activity monitoring
 
+🐛 Troubleshooting
+Backend won't start:
+
+Check MongoDB connection in .env
+Ensure port 5000 is not in use
+
+Frontend can't connect to backend:
+
+Verify VITE_API_URL in frontend .env
+Check CORS settings in backend
+
+Login issues:
+
+Clear browser localStorage
+Check JWT_SECRET is set in backend .env
+
+📄 License
+This project is open source and available under the MIT License.
+👥 Contributors
+Built as a MERN stack learning project.
