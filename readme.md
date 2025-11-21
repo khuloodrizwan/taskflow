@@ -1,349 +1,182 @@
-🚀 TaskFlow: Team Activity & Performance Tracker
+Team Activity & Performance Tracker
+A full-stack web application built with the MERN stack that enables team members to log daily activities, track performance metrics, and provides administrators with comprehensive team oversight through analytics dashboards.
+📋 Overview
+This application allows users to:
 
-Project Overview
-
-The TaskFlow: Team Activity & Performance Tracker is a full-stack web application designed to enhance productivity monitoring and performance analytics within a team. It provides a centralized platform for individual team members to log their daily tasks, measure their productivity, and view their activity history. For administrators, the application offers a powerful dashboard to oversee all team activities, track performance trends using interactive charts, and ensure project goals are met efficiently.
-
-This application is built using the MERN (MongoDB, Express, React, Node) stack, offering real-time data synchronization and a robust, scalable architecture.
+Register and authenticate securely
+Log daily activities with details (title, description, category, priority, status, duration)
+View personal activity history and statistics
+Analyze performance with interactive charts
+(Admin) Monitor all team members and their activities
 
 ✨ Features
-
-User Capabilities (Team Member)
-
-Secure Authentication: User registration and JWT-based login/logout.
-
-Activity Logging: A dedicated form to log daily activities with required fields:
-
-Task Title: Short, descriptive name of the activity.
-
-Description: Detailed notes on the task performed.
-
-Hours Spent: Time duration dedicated to the task.
-
-Productivity Score (1-5): A self-assessed score of how productive the user felt.
-
-Personal Activity View: A dedicated dashboard to view, edit, or delete their own logged activities.
-
-Performance Analytics: A personalized analytics page displaying charts and metrics based on their logged activities.
-
-Administrator Capabilities
-
-Admin Login: Separate, secure login for administrative users.
-
-User Management: Ability to view a list of all registered team members.
-
-Global Activity Overview: A dedicated page to view all activities logged by all users across the team.
-
-Comprehensive Analytics Dashboard: Interactive charts and visualizations powered by Recharts (or similar) to analyze team performance:
-
-Bar Charts: Total hours logged per user or per week.
-
-Line Charts: Trend of average team productivity score over time.
-
-Radar/Other Charts: Distribution of time spent across different task categories (if categorization is implemented).
-
-⚙️ Tech Stack
-
-Backend (API & Database)
-
-Component
-
-Technology
-
-Description
-
-Runtime
-
-Node.js
-
-JavaScript runtime environment for the server.
-
-Framework
-
-Express.js
-
-Fast, unopinionated, minimalist web framework for Node.js.
-
-Database
-
-MongoDB
-
-NoSQL document database for flexible and scalable data storage.
-
-ODM
-
-Mongoose
-
-Elegant MongoDB object modeling for Node.js.
-
-Authentication
-
-JSON Web Tokens (JWT)
-
-Secure, state-less token-based authentication.
-
-Frontend (User Interface)
-
-Component
-
-Technology
-
-Description
-
-
-
-Library
-
-React.js (Vite)
-
-Frontend JavaScript library for building user interfaces.
-
-
-
-Build Tool
-
-Vite
-
-Next-generation frontend tooling for fast development.
-
-
-
-Routing
-
-React Router
-
-Declarative routing for React applications.
-
-
-
-HTTP Client
-
-Axios
-
-Promise-based HTTP client for making API requests.
-
-
-
-Charting
-
-Recharts (or similar)
-
-A composable charting library built on React components.
-
-
-
-Styling
-
-Tailwind CSS / MUI
-
-Utility-first CSS framework or Material UI for responsive design and components.
-
-
-
-📦 Installation and Setup
-
-Follow these steps to set up and run the project locally.
-
+User Features
+
+Authentication: Secure registration and login with JWT tokens
+Activity Logging: Record tasks with title, description, category, priority, status, and time spent
+Personal Dashboard: View activity statistics and recent tasks
+Analytics: Visualize weekly performance with bar, line, and radar charts
+Activity Management: Track activities by category, priority, and completion status
+
+Admin Features
+
+User Management: View all registered users and their roles
+Team Overview: Monitor all team activities across users
+Advanced Analytics: Access comprehensive statistics and completion rates
+Search & Filter: Find activities by status, priority, or search terms
+
+🛠️ Tech Stack
+Backend
+
+Node.js - Runtime environment
+Express.js - Web framework
+MongoDB - Database
+Mongoose - ODM for MongoDB
+JWT - Authentication
+bcryptjs - Password hashing
+
+Frontend
+
+React.js - UI library
+Vite - Build tool
+React Router - Navigation
+Axios - HTTP client
+Recharts - Data visualization
+CSS3 - Styling
+
+📦 Installation
 Prerequisites
 
-You must have the following software installed on your system:
-
-Node.js (v18 or higher)
-
+Node.js (v14 or higher)
+MongoDB (local or Atlas)
 npm or yarn
 
-MongoDB instance (local or remote/Atlas)
-
-Step 1: Clone the Repository
-
-Clone the project repository to your local machine using your specific GitHub link:
-
-git clone [https://github.com/khuloodrizwan/taskflow.git](https://github.com/khuloodrizwan/taskflow.git)
-cd taskflow
-
-
-Step 2: Backend Setup
-
-Navigate into the backend directory and install dependencies.
-
+1. Clone Repository
+bashgit clone <repository-url>
+cd team-activity-tracker
+2. Backend Setup
+bash# Navigate to backend directory
 cd backend
+
+# Install dependencies
 npm install
 
+# Create .env file
+cp .env.example .env
+Configure .env file:
+envPORT=5000
+MONGO_URI=mongodb://localhost:27017/team-tracker
+# Or for MongoDB Atlas:
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/team-tracker
 
-Environment Variables (.env)
-
-Create a file named .env in the backend directory and add the following variables:
-
-# MongoDB Connection String (Update if using a remote server like Atlas)
-MONGO_URI=mongodb://localhost:27017/team_tracker_db
-
-# JWT Secret Key for token signing (REQUIRED for security - USE A LONG, RANDOM STRING)
-JWT_SECRET=your_very_secure_secret_key_change_me_now
-
-# Port for the backend server
-PORT=5000
-
-
-Step 3: Frontend Setup
-
-Navigate into the frontend directory and install dependencies.
-
+JWT_SECRET=your_jwt_secret_key_here
+JWT_EXPIRE=7d
+NODE_ENV=development
+3. Frontend Setup
+bash# Navigate to frontend directory
 cd ../frontend
+
+# Install dependencies
 npm install
 
-
-Environment Variables (Vite)
-
-For Vite to correctly load the API base URL, you must create a file named .env in the root of the frontend/ directory.
-
-Important Note: Frontend environment variables are publicly accessible. They must be prefixed with VITE_ (e.g., VITE_API_BASE_URL) for Vite to load them, and should only contain non-sensitive configuration values.
-
-Create the file .env with the following content:
-
-VITE_API_BASE_URL=http://localhost:5000/api
-
-
-🔨 Project Structure
-
-The project is organized into two primary, separate directories: backend (Node/Express API) and frontend (React application).
-
-Backend Structure
-
-backend/
-├── controllers/         # Request handling logic for API endpoints
-├── middlewares/         # Authentication/authorization checks
-├── models/              # Mongoose schemas (User, Activity)
-├── routes/              # API endpoints definitions (user, activities, admin)
-├── utils/               # Helper functions and utilities
-├── .env                 # Environment variables (private secrets)
-├── db.js                # MongoDB connection and setup file
-└── server.js            # Main entry point and server startup
-
-
-Frontend Structure
-
-frontend/
-├── src/
-│   ├── assets/          # Static files like images or fonts
-│   ├── components/      # Reusable UI components (Buttons, Modals, Forms)
-│   ├── context/         # React Context for global state management (AuthContext)
-│   ├── pages/           # Page-level components (Login, Dashboard, Analytics, Admin)
-│   ├── services/        # Logic for API calls and external services
-│   ├── styles/          # Custom CSS or Tailwind base styles
-│   ├── utils/           # Helper functions, formatters
-│   ├── App.jsx          # Main application component and React Router setup
-│   └── main.jsx         # Entry point for the Vite application
-├── public/              # Static assets (favicons, images)
-└── .env                 # Public environment variables (Vite requires this file)
-
-
-▶️ Running the Project
-
-1. Start the Backend Server
-
-From the backend directory:
-
-# Using nodemon for development (if installed)
+# Create .env file
+echo "VITE_API_URL=http://localhost:5000" > .env
+🚀 Running the Project
+Start Backend Server
+bashcd backend
 npm run dev
-
-# Or, using plain Node.js
-node server.js
-
-
-The backend server will start on the port defined in your .env file (e.g., http://localhost:5000).
-
-2. Start the Frontend Application
-
-From the frontend directory:
-
+# Server runs on http://localhost:5000
+Start Frontend Server
+bashcd frontend
 npm run dev
+# App runs on http://localhost:3000
+```
 
+### Access the Application
+Open your browser and navigate to: **http://localhost:3000**
 
-The React development server will start. You can access the application in your browser at the reported URL (typically http://localhost:5173).
+### Default Login Credentials
+After registering, you can create an admin user by setting `role: 'admin'` during registration.
 
+## 📁 Project Structure
+```
+team-activity-tracker/
+│
+├── backend/
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── userController.js
+│   │   └── activityController.js
+│   ├── models/
+│   │   ├── userModel.js
+│   │   └── activityModel.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── userRoutes.js
+│   │   └── activityRoutes.js
+│   ├── middlewares/
+│   │   ├── authMiddleware.js
+│   │   └── adminMiddleware.js
+│   ├── db.js
+│   ├── server.js
+│   └── package.json
+│
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Navbar.jsx
+    │   │   ├── ActivityItem.jsx
+    │   │   ├── ActivityList.jsx
+    │   │   ├── AnalyticsCharts.jsx
+    │   │   └── Loader.jsx
+    │   ├── pages/
+    │   │   ├── Login.jsx
+    │   │   ├── Dashboard.jsx
+    │   │   ├── ActivityForm.jsx
+    │   │   ├── Analytics.jsx
+    │   │   └── AdminPage.jsx
+    │   ├── context/
+    │   │   └── AuthContext.jsx
+    │   ├── services/
+    │   │   ├── authService.js
+    │   │   ├── activityService.js
+    │   │   └── userService.js
+    │   ├── utils/
+    │   │   ├── api.js
+    │   │   └── formatDate.js
+    │   ├── styles/
+    │   ├── App.jsx
+    │   └── main.jsx
+    └── package.json
+```
 📚 API Documentation
+For detailed API documentation including endpoints, request/response formats, and authentication requirements, see API.md.
 
-For a comprehensive list of all API endpoints, including HTTP methods, request body schemas, and response formats, please refer to the dedicated API documentation file.
+🔐 Authentication
+The application uses JWT (JSON Web Tokens) for authentication:
 
-See API.md for full API details.
+Tokens are stored in localStorage
+Protected routes require valid JWT in Authorization header
+Admin routes require both valid JWT and admin role
 
+🎨 Key Features Implementation
+Activity Tracking
 
+Categories: Development, Design, Testing, Meeting, Documentation, Research, Other
+Priorities: Low, Medium, High
+Status: Pending, In Progress, Completed
 
-Generate a professional README.md file for a Team Activity & Performance Tracker built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
+Analytics Dashboard
 
-Requirements for README:
+Daily activity count (last 7 days)
+Total hours tracked
+Category breakdown (radar chart)
+Priority & status distribution
 
-Project Title & Description: Explain that this is a web app for team members to log daily activities and view performance analytics, and admin can view all team activities.
+Admin Dashboard
 
-Features: Include user registration/login, admin login, activity logging (task title, description, hours spent, productivity score), user activity view, analytics page with charts (bar, line, radar), admin page to view all users and activities.
+Overview statistics
+User management table
+All activities with search/filter
+Real-time activity monitoring
 
-Tech Stack: Backend (Node.js, Express, MongoDB, Mongoose, JWT authentication), Frontend (React.js with Vite, React Router, Axios, Recharts or other chart library, Tailwind CSS/MUI).
-
-Installation Instructions: Step-by-step guide to:
-
-Clone the repository
-
-Install backend dependencies (npm install)
-
-Install frontend dependencies (npm install)
-
-Setup environment variables (.env)
-
-Start backend server (npm run dev or node server.js)
-
-Start frontend server (npm run dev)
-
-Running the Project: Explain how to access the app in the browser.
-
-Project Structure: Show the folder structure for frontend and backend.
-
-API Documentation: Include a short section stating “See API.md for full API details” (the detailed API documentation will be in a separate file).
-
-Formatting Requirements:
-
-Use Markdown with headers, bullet points, code blocks.
-
-Make it professional, clear, and easy to read.
-
-Focus on clarity and completeness, so anyone can set up and run the project.
-
-Output:
-
-A fully written README.md file ready to copy-paste.
-
-2️⃣ API Documentation Prompt
-
-Task for AI:
-Generate a professional API.md file documenting all backend APIs of a Team Activity & Performance Tracker (MERN stack) project.
-
-Requirements:
-
-Include all APIs (auth, user, activity, analytics, admin).
-
-For each API, provide:
-
-Endpoint URL (e.g., POST /api/auth/login)
-
-HTTP Method (GET, POST, etc.)
-
-Description (what the API does)
-
-Request Body (example JSON if applicable)
-
-Response Body (example JSON)
-
-Access / Authorization (Public, Private, Admin)
-
-Optional notes: error messages, validation, or special instructions
-
-Use Markdown formatting, including headers, bullet points, code blocks, and tables if needed.
-
-Make it professional, clear, and complete, so any developer can understand and use the APIs without confusion.
-
-Required Input:
-
-List of all backend routes (endpoint, method, description, request/response examples, access type).
-
-Output:
-
-Fully written API.md file ready to copy-paste, documenting all project APIs.

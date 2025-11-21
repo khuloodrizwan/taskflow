@@ -15,27 +15,48 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // ✅ FIX 1: Wrap in try-catch and only run once on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    const storedToken = localStorage.getItem('token')
-    
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser))
+    checkAuth()
+  }, []) // Empty dependency array - runs only once
+
+  const checkAuth = () => {
+    try {
+      const storedUser = localStorage.getItem('user')
+      const storedToken = localStorage.getItem('token')
+      
+      if (storedUser && storedToken) {
+        setUser(JSON.parse(storedUser))
+      }
+    } catch (error) {
+      console.error('Auth check error:', error)
+      // Clear corrupted data
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+    } finally {
+      // ✅ FIX 2: Always set loading to false in finally block
+      setLoading(false)
     }
-    setLoading(false)
-  }, [])
+  }
 
   const login = async (email, password) => {
     try {
       const data = await loginService(email, password)
-      setUser(data.user)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      localStorage.setItem('token', data.token)
+      
+      // ✅ FIX 3: Backend returns data.data, not data.user
+      const userData = data.data || data.user || data
+      const token = data.data?.token || data.token
+      
+      setUser(userData)
+      localStorage.setItem('user', JSON.stringify(userData))
+      localStorage.setItem('token', token)
+      
       return { success: true }
     } catch (error) {
+      console.error('Login error:', error)
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+        error: error.response?.data?.message || error.message || 'Login failed' 
       }
     }
   }
@@ -43,14 +64,21 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password, role) => {
     try {
       const data = await registerService(name, email, password, role)
-      setUser(data.user)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      localStorage.setItem('token', data.token)
+      
+      // ✅ FIX 4: Backend returns data.data, not data.user
+      const userData = data.data || data.user || data
+      const token = data.data?.token || data.token
+      
+      setUser(userData)
+      localStorage.setItem('user', JSON.stringify(userData))
+      localStorage.setItem('token', token)
+      
       return { success: true }
     } catch (error) {
+      console.error('Register error:', error)
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Registration failed' 
+        error: error.response?.data?.message || error.message || 'Registration failed' 
       }
     }
   }

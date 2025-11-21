@@ -41,19 +41,40 @@ const ActivityForm = () => {
     setSuccess(false)
 
     try {
-      const activityData = {
-        ...formData,
-        user: user._id,
-        duration: Number(formData.duration)
+      // ✅ FIX 6: Validate user exists
+      if (!user || !user._id) {
+        setError('User session expired. Please login again.')
+        setLoading(false)
+        setTimeout(() => navigate('/login'), 2000)
+        return
       }
+
+      // ✅ FIX 7: Ensure all fields are present
+      const activityData = {
+        user: user._id,
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        priority: formData.priority,
+        status: formData.status,
+        duration: Number(formData.duration),
+        date: formData.date
+      }
+
+      // ✅ FIX 8: Debug logging (remove in production)
+      console.log('Submitting activity:', activityData)
       
-      await createActivity(activityData)
+      const response = await createActivity(activityData)
+      console.log('Activity created:', response)
+      
       setSuccess(true)
       
       setTimeout(() => {
-        navigate('/dashboard')
+        navigate('/dashboard', { replace: true })
       }, 1500)
     } catch (err) {
+      console.error('Activity creation error:', err)
+      console.error('Error response:', err.response?.data)
       setError(err.response?.data?.message || 'Failed to create activity')
       setLoading(false)
     }

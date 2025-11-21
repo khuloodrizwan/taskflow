@@ -39,11 +39,13 @@ const Login = () => {
       }
 
       if (result.success) {
-        navigate('/dashboard')
+        // ✅ FIX 7: Use replace: true to avoid back button issues and prevent re-rendering
+        navigate('/dashboard', { replace: true })
       } else {
         setError(result.error)
       }
     } catch (err) {
+      console.error('Submit error:', err)
       setError('An unexpected error occurred')
     } finally {
       setLoading(false)
@@ -171,6 +173,13 @@ const Login = () => {
                 onClick={() => {
                   setIsLogin(!isLogin)
                   setError('')
+                  // ✅ FIX 8: Clear form when switching tabs
+                  setFormData({
+                    name: '',
+                    email: '',
+                    password: '',
+                    role: 'user'
+                  })
                 }}
               >
                 {isLogin ? 'Register here' : 'Login here'}

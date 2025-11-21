@@ -1,397 +1,295 @@
-📚 TaskFlow API Documentation
+Complete API reference for Team Activity & Performance Tracker backend services.
+Base URL: http://localhost:5000
 
-This document provides a comprehensive overview of the backend API endpoints for the TaskFlow Team Activity & Performance Tracker application.
-
-All endpoints are prefixed with /api. Authentication is handled via JSON Web Tokens (JWT) passed in the Authorization: Bearer <token> header for private routes.
-
-1. Authentication Routes (/api/auth)
-
-These endpoints are used for user registration and login, returning a JWT upon successful authentication.
-
-1.1. Register User
-
-Detail
-
-Description
-
-Endpoint
-
-POST /api/auth/register
-
-Access
-
-Public
-
-Description
-
-Creates a new user account.
-
-Request Body (JSON)
-
-{
-  "username": "jane_doe",
-  "email": "jane.doe@example.com",
-  "password": "securepassword123",
+🔐 Authentication APIs
+Register User
+httpPOST /api/auth/register
+Access: Public
+Request Body:
+json{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
   "role": "user"
 }
-
-
-Successful Response (201 Created)
-
-{
+Response (201):
+json{
+  "success": true,
   "message": "User registered successfully",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFh...",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
-    "id": "631a7f0e...",
-    "username": "jane_doe",
-    "email": "jane.doe@example.com",
+    "_id": "60d5ec49f1b2c72b8c8e4f1a",
+    "name": "John Doe",
+    "email": "john@example.com",
     "role": "user"
   }
 }
 
-
-Error Response (400 Bad Request)
-
-{
-  "message": "User with this email already exists."
+Login User
+httpPOST /api/auth/login
+Access: Public
+Request Body:
+json{
+  "email": "john@example.com",
+  "password": "password123"
 }
-
-
-1.2. Login User
-
-Detail
-
-Description
-
-Endpoint
-
-POST /api/auth/login
-
-Access
-
-Public
-
-Description
-
-Authenticates user credentials and returns a JWT.
-
-Request Body (JSON)
-
-{
-  "email": "jane.doe@example.com",
-  "password": "securepassword123"
-}
-
-
-Successful Response (200 OK)
-
-{
+Response (200):
+json{
+  "success": true,
   "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFh...",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
-    "id": "631a7f0e...",
-    "username": "jane_doe",
-    "email": "jane.doe@example.com",
+    "_id": "60d5ec49f1b2c72b8c8e4f1a",
+    "name": "John Doe",
+    "email": "john@example.com",
     "role": "user"
   }
 }
 
+👤 User APIs
+Get All Users
+httpGET /api/users
+```
 
-Error Response (401 Unauthorized)
+**Access:** Private (Admin only)
 
-{
-  "message": "Invalid email or password."
+**Headers:**
+```
+Authorization: Bearer <token>
+Response (200):
+json{
+  "success": true,
+  "count": 5,
+  "data": [
+    {
+      "_id": "60d5ec49f1b2c72b8c8e4f1a",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "user",
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    }
+  ]
 }
 
+Get User by ID
+httpGET /api/users/:id
+```
 
-2. User & Admin Routes
+**Access:** Private
 
-2.1. Get All Users
-
-Detail
-
-Description
-
-Endpoint
-
-GET /api/user
-
-Access
-
-Private (Admin Only)
-
-Description
-
-Retrieves a list of all registered users in the system.
-
-Successful Response (200 OK)
-
-[
-  {
-    "_id": "631a7f0e...",
-    "username": "admin_user",
-    "email": "admin@taskflow.com",
-    "role": "admin"
-  },
-  {
-    "_id": "631a7f0f...",
-    "username": "team_member_1",
-    "email": "tm1@taskflow.com",
+**Headers:**
+```
+Authorization: Bearer <token>
+Response (200):
+json{
+  "success": true,
+  "data": {
+    "_id": "60d5ec49f1b2c72b8c8e4f1a",
+    "name": "John Doe",
+    "email": "john@example.com",
     "role": "user"
   }
-]
-
-
-Error Response (403 Forbidden)
-
-{
-  "message": "Access denied. Admin required."
 }
 
+📋 Activity APIs
+Create Activity
+httpPOST /api/activity
+```
 
-3. Activity Routes (/api/activity)
+**Access:** Private
 
-These endpoints manage the logging and retrieval of individual work activities.
-
-3.1. Add New Activity
-
-Detail
-
-Description
-
-Endpoint
-
-POST /api/activity
-
-Access
-
-Private (User/Admin)
-
-Description
-
-Logs a new activity for the authenticated user.
-
-Request Body (JSON)
-
-{
-  "title": "Setup new feature branch",
-  "description": "Configured database connection and initialized routes.",
-  "hoursSpent": 3.5,
-  "productivityScore": 4
+**Headers:**
+```
+Authorization: Bearer <token>
+Request Body:
+json{
+  "user": "60d5ec49f1b2c72b8c8e4f1a",
+  "title": "Complete frontend design",
+  "description": "Design and implement the dashboard UI",
+  "category": "Development",
+  "priority": "high",
+  "status": "in-progress",
+  "duration": 3.5,
+  "date": "2024-01-15"
 }
-
-
-Successful Response (201 Created)
-
-{
-  "message": "Activity logged successfully",
-  "activity": {
-    "_id": "631a80c1...",
-    "title": "Setup new feature branch",
-    "description": "Configured database connection and initialized routes.",
-    "hoursSpent": 3.5,
-    "productivityScore": 4,
-    "user": "631a7f0e...",
-    "date": "2023-10-27T08:00:00.000Z"
-  }
-}
-
-
-3.2. Get User's Activities
-
-Detail
-
-Description
-
-Endpoint
-
-GET /api/activity/:userId
-
-Access
-
-Private (User/Admin)
-
-Description
-
-Retrieves all activities logged by a specific user ID.
-
-Note
-
-A regular user can only request their own ID. An Admin can request any user ID.
-
-Successful Response (200 OK)
-
-[
-  {
-    "_id": "631a80c1...",
-    "title": "Setup new feature branch",
-    "hoursSpent": 3.5,
-    "productivityScore": 4,
-    "date": "2023-10-27T08:00:00.000Z"
-  },
-  {
-    "_id": "631a80c2...",
-    "title": "Team Meeting",
-    "hoursSpent": 1.0,
-    "productivityScore": 3,
-    "date": "2023-10-27T09:00:00.000Z"
-  }
-]
-
-
-3.3. Get All Activities (Admin)
-
-Detail
-
-Description
-
-Endpoint
-
-GET /api/admin/all-activities
-
-Access
-
-Private (Admin Only)
-
-Description
-
-Retrieves all activity records from all users in the system.
-
-Successful Response (200 OK)
-
-[
-  {
-    "_id": "631a80c1...",
-    "title": "Setup new feature branch",
-    "hoursSpent": 3.5,
+Response (201):
+json{
+  "success": true,
+  "message": "Activity created successfully",
+  "data": {
+    "_id": "60d5ec49f1b2c72b8c8e4f1b",
     "user": {
-        "id": "631a7f0f...",
-        "username": "team_member_1"
-    }
-  },
-  {
-    "_id": "631a80c3...",
-    "title": "Reviewed PRs",
-    "hoursSpent": 2.0,
-    "user": {
-        "id": "631a7f0e...",
-        "username": "admin_user"
-    }
+      "_id": "60d5ec49f1b2c72b8c8e4f1a",
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "title": "Complete frontend design",
+    "description": "Design and implement the dashboard UI",
+    "category": "Development",
+    "priority": "high",
+    "status": "in-progress",
+    "duration": 3.5,
+    "date": "2024-01-15T00:00:00.000Z",
+    "createdAt": "2024-01-15T14:30:00.000Z"
   }
-  // ... more activities
-]
+}
 
+Get User Activities
+httpGET /api/activity/:userId
+```
 
-4. Analytics Routes (/api/analytics)
+**Access:** Private
 
-4.1. Get Weekly Analytics for User
-
-Detail
-
-Description
-
-Endpoint
-
-GET /api/analytics/:userId
-
-Access
-
-Private (User/Admin)
-
-Description
-
-Calculates and returns weekly performance metrics for a specific user, suitable for charts.
-
-Note
-
-A regular user can only request their own ID. Admin can request any user ID.
-
-Successful Response (200 OK)
-
-{
-  "user": "631a7f0f...",
-  "weeklySummary": [
+**Headers:**
+```
+Authorization: Bearer <token>
+Response (200):
+json{
+  "success": true,
+  "count": 10,
+  "data": [
     {
-      "day": "Mon",
-      "totalHours": 8.0,
-      "avgProductivity": 4.1
-    },
+      "_id": "60d5ec49f1b2c72b8c8e4f1b",
+      "user": {
+        "_id": "60d5ec49f1b2c72b8c8e4f1a",
+        "name": "John Doe",
+        "email": "john@example.com"
+      },
+      "title": "Complete frontend design",
+      "category": "Development",
+      "priority": "high",
+      "status": "completed",
+      "duration": 3.5,
+      "date": "2024-01-15T00:00:00.000Z"
+    }
+  ]
+}
+
+Get All Activities (Admin)
+httpGET /api/admin/all-activities
+```
+
+**Access:** Private (Admin only)
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Response (200):
+json{
+  "success": true,
+  "count": 50,
+  "data": [
     {
-      "day": "Tue",
-      "totalHours": 7.5,
-      "avgProductivity": 3.8
-    },
-    // ... continues for the last 7 days or full week
+      "_id": "60d5ec49f1b2c72b8c8e4f1b",
+      "user": {
+        "_id": "60d5ec49f1b2c72b8c8e4f1a",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "user"
+      },
+      "title": "Complete frontend design",
+      "category": "Development",
+      "priority": "high",
+      "status": "completed",
+      "duration": 3.5
+    }
+  ]
+}
+
+📊 Analytics API
+Get User Analytics
+httpGET /api/analytics/:userId
+```
+
+**Access:** Private
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Response (200):
+json{
+  "success": true,
+  "totalActivities": 25,
+  "totalHours": 87.5,
+  "averageDuration": 3.5,
+  "mostProductiveDay": "Mon",
+  "dailyActivities": [
+    {
+      "date": "2024-01-15",
+      "count": 3,
+      "totalDuration": 8.5
+    }
   ],
-  "overallMetrics": {
-    "totalActivities": 45,
-    "averageHoursPerDay": 7.8,
-    "averageProductivityScore": 4.05
-  }
+  "categoryBreakdown": [
+    {
+      "_id": "Development",
+      "count": 15,
+      "totalDuration": 45
+    }
+  ],
+  "priorityBreakdown": [
+    {
+      "_id": "high",
+      "count": 10
+    }
+  ],
+  "statusBreakdown": [
+    {
+      "_id": "completed",
+      "count": 20
+    }
+  ]
+}
+```
+
+---
+
+## 🔒 Authentication & Authorization
+
+All protected routes require a valid JWT token in the Authorization header:
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Access Levels:
+
+Public: No authentication required
+Private: Valid JWT token required
+Admin: Valid JWT token + admin role required
+
+
+⚠️ Error Responses
+401 Unauthorized:
+json{
+  "success": false,
+  "message": "Not authorized, no token provided"
+}
+403 Forbidden:
+json{
+  "success": false,
+  "message": "Access denied. Admin privileges required."
+}
+400 Bad Request:
+json{
+  "success": false,
+  "message": "Please provide all required fields"
+}
+404 Not Found:
+json{
+  "success": false,
+  "message": "User not found"
+}
+500 Server Error:
+json{
+  "success": false,
+  "message": "Error creating activity",
+  "error": "Detailed error message"
 }
 
+📝 Notes
 
-Error Response (404 Not Found)
-
-{
-  "message": "User not found or no
-}
-
-
-
-
-Generate a professional API.md file documenting all backend APIs for a Team Activity & Performance Tracker built with MERN stack (MongoDB, Express.js, React.js, Node.js).
-
-Backend Routes to Include:
-
-Auth Routes:
-
-POST /api/auth/register → Register user (Public)
-
-POST /api/auth/login → Login user (Public)
-
-User Routes:
-
-GET /api/user → Get all users (Private/Admin)
-
-Activity Routes:
-
-POST /api/activity → Add activity (Private)
-
-GET /api/activity/:userId → Get activities of a specific user (Private)
-
-GET /api/admin/all-activities → Get all activities (Admin only, Private/Admin)
-
-Analytics Routes:
-
-GET /api/analytics/:userId → Get weekly analytics for a user (Private)
-
-For each API, include:
-
-Endpoint URL
-
-HTTP Method
-
-Description – what the API does
-
-Access / Authorization – Public, Private, or Admin
-
-Request Body (example JSON if applicable)
-
-Response Body (example JSON)
-
-Optional Notes – error messages, validation rules, special instructions
-
-Formatting Requirements:
-
-Use Markdown with headers, code blocks, bullet points, and tables if necessary.
-
-Make it professional, readable, and complete, so any developer can understand and use the APIs without confusion.
-
-Include examples for all request/response scenarios (success, errors if relevant).
-
-Output:
-
-A fully written API.md file ready to copy-paste.
-
-Cover all routes listed above and ensure accuracy for each endpoint.
+All dates should be in ISO 8601 format
+Duration is measured in hours (decimal allowed)
+Category options: Development, Design, Testing, Meeting, Documentation, Research, Other
+Priority options: low, medium, high
+Status options: pending, in-progress, completed
+Passwords are hashed using bcrypt before storage
+JWT tokens expire after 7 days (configurable)

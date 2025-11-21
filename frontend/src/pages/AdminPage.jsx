@@ -22,16 +22,23 @@ const AdminPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true)
+      setError('')
+      
       const [usersData, activitiesData] = await Promise.all([
         getAllUsers(),
         getAllActivities()
       ])
+      
+      // ✅ Services now return arrays directly
       setUsers(usersData)
       setActivities(activitiesData)
-      setError('')
+      
     } catch (err) {
-      setError('Failed to fetch admin data')
-      console.error(err)
+      console.error('Fetch admin data error:', err)
+      const errorMessage = err.response?.data?.message || 
+                          err.message ||
+                          'Failed to fetch admin data'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -55,9 +62,9 @@ const AdminPage = () => {
   }
 
   const filteredActivities = activities.filter(activity => {
-    const matchesSearch = activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         activity.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         activity.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = activity.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         activity.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         activity.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = filterStatus === 'all' || activity.status === filterStatus
     const matchesPriority = filterPriority === 'all' || activity.priority === filterPriority
     
@@ -161,46 +168,60 @@ const AdminPage = () => {
                 <div className="overview-card">
                   <h3 className="card-title">Recent Users</h3>
                   <div className="users-list-preview">
-                    {users.slice(0, 5).map(user => (
-                      <div key={user._id} className="user-preview-item">
-                        <div className="user-avatar-small">
-                          {user.name.charAt(0).toUpperCase()}
+                    {users.length > 0 ? (
+                      users.slice(0, 5).map(user => (
+                        <div key={user._id} className="user-preview-item">
+                          <div className="user-avatar-small">
+                            {user.name?.charAt(0).toUpperCase() || '?'}
+                          </div>
+                          <div className="user-info-small">
+                            <span className="user-name-small">{user.name}</span>
+                            <span className="user-email-small">{user.email}</span>
+                          </div>
+                          <span className={`badge badge-${user.role === 'admin' ? 'primary' : 'secondary'}`}>
+                            {user.role}
+                          </span>
                         </div>
-                        <div className="user-info-small">
-                          <span className="user-name-small">{user.name}</span>
-                          <span className="user-email-small">{user.email}</span>
-                        </div>
-                        <span className={`badge badge-${user.role === 'admin' ? 'primary' : 'secondary'}`}>
-                          {user.role}
-                        </span>
+                      ))
+                    ) : (
+                      <div className="no-results">
+                        <span className="no-results-icon">👥</span>
+                        <p>No users found</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
 
                 <div className="overview-card">
                   <h3 className="card-title">Recent Activities</h3>
                   <div className="activities-list-preview">
-                    {activities.slice(0, 5).map(activity => (
-                      <div key={activity._id} className="activity-preview-item">
-                        <div className="activity-preview-header">
-                          <span className="activity-preview-title">{activity.title}</span>
-                          <span className={`badge badge-${
-                            activity.status === 'completed' ? 'success' :
-                            activity.status === 'in-progress' ? 'primary' : 'warning'
-                          }`}>
-                            {activity.status}
-                          </span>
+                    {activities.length > 0 ? (
+                      activities.slice(0, 5).map(activity => (
+                        <div key={activity._id} className="activity-preview-item">
+                          <div className="activity-preview-header">
+                            <span className="activity-preview-title">{activity.title}</span>
+                            <span className={`badge badge-${
+                              activity.status === 'completed' ? 'success' :
+                              activity.status === 'in-progress' ? 'primary' : 'warning'
+                            }`}>
+                              {activity.status}
+                            </span>
+                          </div>
+                          <div className="activity-preview-meta">
+                            <span>{activity.user?.name || 'Unknown'}</span>
+                            <span>•</span>
+                            <span>{activity.duration}h</span>
+                            <span>•</span>
+                            <span>{activity.category}</span>
+                          </div>
                         </div>
-                        <div className="activity-preview-meta">
-                          <span>{activity.user?.name}</span>
-                          <span>•</span>
-                          <span>{activity.duration}h</span>
-                          <span>•</span>
-                          <span>{activity.category}</span>
-                        </div>
+                      ))
+                    ) : (
+                      <div className="no-results">
+                        <span className="no-results-icon">📋</span>
+                        <p>No activities found</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
@@ -212,46 +233,53 @@ const AdminPage = () => {
               <div className="section-header">
                 <h2 className="section-title">All Users ({users.length})</h2>
               </div>
-              <div className="users-table-container">
-                <table className="users-table">
-                  <thead>
-                    <tr>
-                      <th>User</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Activities</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(user => {
-                      const userActivities = activities.filter(a => a.user?._id === user._id)
-                      return (
-                        <tr key={user._id}>
-                          <td>
-                            <div className="user-cell">
-                              <div className="user-avatar-table">
-                                {user.name.charAt(0).toUpperCase()}
+              {users.length > 0 ? (
+                <div className="users-table-container">
+                  <table className="users-table">
+                    <thead>
+                      <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Activities</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map(user => {
+                        const userActivities = activities.filter(a => a.user?._id === user._id)
+                        return (
+                          <tr key={user._id}>
+                            <td>
+                              <div className="user-cell">
+                                <div className="user-avatar-table">
+                                  {user.name?.charAt(0).toUpperCase() || '?'}
+                                </div>
+                                <span className="user-name-table">{user.name}</span>
                               </div>
-                              <span className="user-name-table">{user.name}</span>
-                            </div>
-                          </td>
-                          <td className="email-cell">{user.email}</td>
-                          <td>
-                            <span className={`badge badge-${user.role === 'admin' ? 'primary' : 'secondary'}`}>
-                              {user.role}
-                            </span>
-                          </td>
-                          <td className="count-cell">{userActivities.length}</td>
-                          <td>
-                            <span className="badge badge-success">Active</span>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                            </td>
+                            <td className="email-cell">{user.email}</td>
+                            <td>
+                              <span className={`badge badge-${user.role === 'admin' ? 'primary' : 'secondary'}`}>
+                                {user.role}
+                              </span>
+                            </td>
+                            <td className="count-cell">{userActivities.length}</td>
+                            <td>
+                              <span className="badge badge-success">Active</span>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="no-results">
+                  <span className="no-results-icon">👥</span>
+                  <p>No users found in the system</p>
+                </div>
+              )}
             </div>
           )}
 

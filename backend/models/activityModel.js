@@ -1,48 +1,56 @@
-
-// models/Activity.js - Activity model schema
+// models/activityModel.js - Updated Activity model schema to match frontend
 
 const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Reference to User model
+    ref: 'User',
     required: [true, 'User ID is required']
   },
-  taskTitle: {
+  title: {
     type: String,
-    required: [true, 'Task title is required'],
+    required: [true, 'Activity title is required'],
     trim: true
   },
-  taskDescription: {
+  description: {
     type: String,
-    required: [true, 'Task description is required'],
+    required: [true, 'Activity description is required'],
     trim: true
   },
-  hoursSpent: {
+  category: {
+    type: String,
+    required: [true, 'Category is required'],
+    enum: ['Development', 'Design', 'Testing', 'Meeting', 'Documentation', 'Research', 'Other'],
+    default: 'Other'
+  },
+  priority: {
+    type: String,
+    required: [true, 'Priority is required'],
+    enum: ['low', 'medium', 'high'],
+    default: 'medium'
+  },
+  status: {
+    type: String,
+    required: [true, 'Status is required'],
+    enum: ['pending', 'in-progress', 'completed'],
+    default: 'pending'
+  },
+  duration: {
     type: Number,
-    required: [true, 'Hours spent is required'],
-    min: [0, 'Hours spent cannot be negative'],
-    max: [24, 'Hours spent cannot exceed 24 hours']
+    required: [true, 'Duration is required'],
+    min: [0, 'Duration cannot be negative']
   },
   date: {
     type: Date,
     required: [true, 'Date is required'],
     default: Date.now
-  },
-  productivityScore: {
-    type: Number,
-    required: [true, 'Productivity score is required'],
-    min: [0, 'Productivity score must be between 0 and 10'],
-    max: [10, 'Productivity score must be between 0 and 10']
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
+}, {
+  timestamps: true // Adds createdAt and updatedAt automatically
 });
 
 // Index for better query performance
-activitySchema.index({ userId: 1, date: -1 });
+activitySchema.index({ user: 1, date: -1 });
 
 module.exports = mongoose.model('Activity', activitySchema);

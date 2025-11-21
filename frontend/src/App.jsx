@@ -11,6 +11,7 @@ import Loader from './components/Loader'
 function App() {
   const { user, loading } = useAuth()
 
+  // ✅ FIX 5: Show loader while checking authentication
   if (loading) {
     return <Loader />
   }
@@ -19,29 +20,30 @@ function App() {
     <div className="app">
       {user && <Navbar />}
       <Routes>
+        {/* ✅ FIX 6: Added 'replace' prop to all Navigate components to prevent blinking */}
         <Route 
           path="/login" 
-          element={user ? <Navigate to="/dashboard" /> : <Login />} 
+          element={user ? <Navigate to="/dashboard" replace /> : <Login />} 
         />
         <Route 
           path="/dashboard" 
-          element={user ? <Dashboard /> : <Navigate to="/login" />} 
+          element={user ? <Dashboard /> : <Navigate to="/login" replace />} 
         />
         <Route 
           path="/add-activity" 
-          element={user ? <ActivityForm /> : <Navigate to="/login" />} 
+          element={user ? <ActivityForm /> : <Navigate to="/login" replace />} 
         />
         <Route 
           path="/analytics" 
-          element={user ? <Analytics /> : <Navigate to="/login" />} 
+          element={user ? <Analytics /> : <Navigate to="/login" replace />} 
         />
         <Route 
           path="/admin" 
-          element={user?.role === 'admin' ? <AdminPage /> : <Navigate to="/dashboard" />} 
+          element={user?.role === 'admin' ? <AdminPage /> : <Navigate to="/dashboard" replace />} 
         />
         <Route 
           path="/" 
-          element={<Navigate to={user ? "/dashboard" : "/login"} />} 
+          element={<Navigate to={user ? "/dashboard" : "/login"} replace />} 
         />
       </Routes>
     </div>

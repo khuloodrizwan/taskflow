@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -19,11 +18,19 @@ const Dashboard = () => {
     totalHours: 0
   })
 
+  // ✅ FIX 9: Add user as dependency but add safety check
   useEffect(() => {
-    fetchActivities()
-  }, [user])
+    if (user?._id) {
+      fetchActivities()
+    }
+  }, [user?._id]) // Only re-fetch when user ID actually changes
 
   const fetchActivities = async () => {
+    // ✅ FIX 10: Safety check before fetching
+    if (!user?._id) {
+      return
+    }
+
     try {
       setLoading(true)
       const data = await getUserActivities(user._id)
@@ -32,7 +39,7 @@ const Dashboard = () => {
       setError('')
     } catch (err) {
       setError('Failed to fetch activities')
-      console.error(err)
+      console.error('Fetch activities error:', err)
     } finally {
       setLoading(false)
     }
@@ -73,7 +80,7 @@ const Dashboard = () => {
             Add New Activity
           </Link>
         </div>
-        </div>
+        {/* ✅ FIX 11: This closing div was missing, causing render issues */}
 
         <div className="stats-grid">
           <div className="stat-card stat-primary">
@@ -170,7 +177,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-  
+    </div>
   )
 }
 
