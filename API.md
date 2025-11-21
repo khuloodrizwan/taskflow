@@ -405,4 +405,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-**For setup instructions and project overview, see [README.md](./README.md)**
+**For setup instructions and project overview, see [readme.md](./README.md)**
