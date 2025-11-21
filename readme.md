@@ -148,6 +148,8 @@ team-activity-tracker/
     │   ├── App.jsx
     │   └── main.jsx
     └── package.json
+
+```
 📚 API Documentation
 For detailed API documentation including endpoints, request/response formats, and authentication requirements, see API.md.
 🔐 Authentication
