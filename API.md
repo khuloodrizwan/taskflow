@@ -1,19 +1,33 @@
-Complete API reference for Team Activity & Performance Tracker backend services.
-Base URL: http://localhost:5000
+# API Documentation
 
-🔐 Authentication APIs
-Register User
-httpPOST /api/auth/register
-Access: Public
-Request Body:
-json{
+Complete API reference for Team Activity & Performance Tracker backend services.
+
+**Base URL:** `http://localhost:5000`
+
+---
+
+## 🔐 Authentication APIs
+
+### Register User
+```http
+POST /api/auth/register
+```
+
+**Access:** Public
+
+**Request Body:**
+```json
+{
   "name": "John Doe",
   "email": "john@example.com",
   "password": "password123",
   "role": "user"
 }
-Response (201):
-json{
+```
+
+**Response (201):**
+```json
+{
   "success": true,
   "message": "User registered successfully",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -24,17 +38,28 @@ json{
     "role": "user"
   }
 }
+```
 
-Login User
-httpPOST /api/auth/login
-Access: Public
-Request Body:
-json{
+---
+
+### Login User
+```http
+POST /api/auth/login
+```
+
+**Access:** Public
+
+**Request Body:**
+```json
+{
   "email": "john@example.com",
   "password": "password123"
 }
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "message": "Login successful",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -45,10 +70,15 @@ json{
     "role": "user"
   }
 }
+```
 
-👤 User APIs
-Get All Users
-httpGET /api/users
+---
+
+## 👤 User APIs
+
+### Get All Users
+```http
+GET /api/users
 ```
 
 **Access:** Private (Admin only)
@@ -56,8 +86,11 @@ httpGET /api/users
 **Headers:**
 ```
 Authorization: Bearer <token>
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "count": 5,
   "data": [
@@ -70,9 +103,13 @@ json{
     }
   ]
 }
+```
 
-Get User by ID
-httpGET /api/users/:id
+---
+
+### Get User by ID
+```http
+GET /api/users/:id
 ```
 
 **Access:** Private
@@ -80,8 +117,11 @@ httpGET /api/users/:id
 **Headers:**
 ```
 Authorization: Bearer <token>
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "data": {
     "_id": "60d5ec49f1b2c72b8c8e4f1a",
@@ -90,10 +130,15 @@ json{
     "role": "user"
   }
 }
+```
 
-📋 Activity APIs
-Create Activity
-httpPOST /api/activity
+---
+
+## 📋 Activity APIs
+
+### Create Activity
+```http
+POST /api/activity
 ```
 
 **Access:** Private
@@ -101,8 +146,11 @@ httpPOST /api/activity
 **Headers:**
 ```
 Authorization: Bearer <token>
-Request Body:
-json{
+```
+
+**Request Body:**
+```json
+{
   "user": "60d5ec49f1b2c72b8c8e4f1a",
   "title": "Complete frontend design",
   "description": "Design and implement the dashboard UI",
@@ -112,8 +160,11 @@ json{
   "duration": 3.5,
   "date": "2024-01-15"
 }
-Response (201):
-json{
+```
+
+**Response (201):**
+```json
+{
   "success": true,
   "message": "Activity created successfully",
   "data": {
@@ -133,9 +184,13 @@ json{
     "createdAt": "2024-01-15T14:30:00.000Z"
   }
 }
+```
 
-Get User Activities
-httpGET /api/activity/:userId
+---
+
+### Get User Activities
+```http
+GET /api/activity/:userId
 ```
 
 **Access:** Private
@@ -143,8 +198,11 @@ httpGET /api/activity/:userId
 **Headers:**
 ```
 Authorization: Bearer <token>
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "count": 10,
   "data": [
@@ -164,9 +222,13 @@ json{
     }
   ]
 }
+```
 
-Get All Activities (Admin)
-httpGET /api/admin/all-activities
+---
+
+### Get All Activities (Admin)
+```http
+GET /api/admin/all-activities
 ```
 
 **Access:** Private (Admin only)
@@ -174,8 +236,11 @@ httpGET /api/admin/all-activities
 **Headers:**
 ```
 Authorization: Bearer <token>
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "count": 50,
   "data": [
@@ -195,10 +260,15 @@ json{
     }
   ]
 }
+```
 
-📊 Analytics API
-Get User Analytics
-httpGET /api/analytics/:userId
+---
+
+## 📊 Analytics API
+
+### Get User Analytics
+```http
+GET /api/analytics/:userId
 ```
 
 **Access:** Private
@@ -206,8 +276,11 @@ httpGET /api/analytics/:userId
 **Headers:**
 ```
 Authorization: Bearer <token>
-Response (200):
-json{
+```
+
+**Response (200):**
+```json
+{
   "success": true,
   "totalActivities": 25,
   "totalHours": 87.5,
@@ -249,54 +322,87 @@ json{
 All protected routes require a valid JWT token in the Authorization header:
 ```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-Access Levels:
+```
 
-Public: No authentication required
-Private: Valid JWT token required
-Admin: Valid JWT token + admin role required
+**Access Levels:**
 
+- **Public:** No authentication required
+- **Private:** Valid JWT token required
+- **Admin:** Valid JWT token + admin role required
 
-⚠️ Error Responses
-401 Unauthorized:
-json{
+---
+
+## ⚠️ Error Responses
+
+**401 Unauthorized:**
+```json
+{
   "success": false,
   "message": "Not authorized, no token provided"
 }
-403 Forbidden:
-json{
+```
+
+**403 Forbidden:**
+```json
+{
   "success": false,
   "message": "Access denied. Admin privileges required."
 }
-400 Bad Request:
-json{
+```
+
+**400 Bad Request:**
+```json
+{
   "success": false,
   "message": "Please provide all required fields"
 }
-404 Not Found:
-json{
+```
+
+**404 Not Found:**
+```json
+{
   "success": false,
   "message": "User not found"
 }
-500 Server Error:
-json{
+```
+
+**500 Server Error:**
+```json
+{
   "success": false,
   "message": "Error creating activity",
   "error": "Detailed error message"
 }
+```
 
-📝 Notes
+---
 
-All dates should be in ISO 8601 format
-Duration is measured in hours (decimals allowed, e.g., 3.5)
-Category options: Development, Design, Testing, Meeting, Documentation, Research, Other
-Priority options: low, medium, high
-Status options: pending, in-progress, completed
-Passwords are hashed using bcrypt before storage
-JWT tokens expire after 7 days (configurable in .env)
-All timestamps are in UTC
+## 📝 Notes
 
+- All dates should be in **ISO 8601 format**
+- Duration is measured in **hours** (decimals allowed, e.g., 3.5)
+- **Category options:** Development, Design, Testing, Meeting, Documentation, Research, Other
+- **Priority options:** low, medium, high
+- **Status options:** pending, in-progress, completed
+- Passwords are hashed using **bcrypt** before storage
+- JWT tokens expire after **7 days** (configurable in `.env`)
+- All timestamps are in UTC
 
-🔗 Quick Reference
-MethodEndpointAccessDescriptionPOST/api/auth/registerPublicRegister new userPOST/api/auth/loginPublicLogin userGET/api/usersAdminGet all usersGET/api/users/:idPrivateGet user by IDPOST/api/activityPrivateCreate activityGET/api/activity/:userIdPrivateGet user activitiesGET/api/admin/all-activitiesAdminGet all activitiesGET/api/analytics/:userIdPrivateGet user analytics
+---
 
-For setup instructions and project overview, see See [readme.md](./readme.md)
+## 🔗 Quick Reference
+
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| POST | `/api/auth/register` | Public | Register new user |
+| POST | `/api/auth/login` | Public | Login user |
+| GET | `/api/users` | Admin | Get all users |
+| GET | `/api/users/:id` | Private | Get user by ID |
+| POST | `/api/activity` | Private | Create activity |
+| GET | `/api/activity/:userId` | Private | Get user activities |
+| GET | `/api/admin/all-activities` | Admin | Get all activities |
+| GET | `/api/analytics/:userId` | Private | Get user analytics |
+
+---
+
+**For setup instructions and project overview, see [README.md](./README.md)**
