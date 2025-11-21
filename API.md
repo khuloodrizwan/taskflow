@@ -287,9 +287,16 @@ json{
 📝 Notes
 
 All dates should be in ISO 8601 format
-Duration is measured in hours (decimal allowed)
+Duration is measured in hours (decimals allowed, e.g., 3.5)
 Category options: Development, Design, Testing, Meeting, Documentation, Research, Other
 Priority options: low, medium, high
 Status options: pending, in-progress, completed
 Passwords are hashed using bcrypt before storage
-JWT tokens expire after 7 days (configurable)
+JWT tokens expire after 7 days (configurable in .env)
+All timestamps are in UTC
+
+
+🔗 Quick Reference
+MethodEndpointAccessDescriptionPOST/api/auth/registerPublicRegister new userPOST/api/auth/loginPublicLogin userGET/api/usersAdminGet all usersGET/api/users/:idPrivateGet user by IDPOST/api/activityPrivateCreate activityGET/api/activity/:userIdPrivateGet user activitiesGET/api/admin/all-activitiesAdminGet all activitiesGET/api/analytics/:userIdPrivateGet user analytics
+
+For setup instructions and project overview, see See [readme.md](./readme.md)
